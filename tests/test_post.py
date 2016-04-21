@@ -55,3 +55,14 @@ class TestAPIPost(base.BaseTestCase):
             resp = self._post('api.run', data)
             data = json.loads(compat.str(resp.data, encoding='utf-8'))
             self.assertFalse(data['success'])
+            
+    def test_empty_unrequired_field(self):
+        data = {'data_url': ('https://gist.githubusercontent.com/georgiana-b/4f55b396b72213748b869d29c3418bd5'
+                            '/raw/09edfb290d2a5a7ad7eb99c48dbfebaf8e1ca4bb/persons.csv'),
+                'schema_url': ('https://gist.githubusercontent.com/georgiana-b/4f55b396b72213748b869d29c3418bd5'
+                              '/raw/09edfb290d2a5a7ad7eb99c48dbfebaf8e1ca4bb/person_schema.json')
+        }
+        resp = self._post('api.run', data, with_files=False)
+        data = json.loads(compat.str(resp.data, encoding='utf-8'))
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(data['success'])
